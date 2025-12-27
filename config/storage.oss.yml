@@ -28,3 +28,4 @@ s3:
   response_checksum_validation: <%= ENV.fetch("S3_RESPONSE_CHECKSUM_VALIDATION", "when_supported") %>
   secret_access_key: <%= ENV["S3_SECRET_ACCESS_KEY"] %>
   public: true
+  public_endpoint: https://images.nativostudio.co
