@@ -1,6 +1,6 @@
 # Name of this app
 service: fizzy
-image: fizzy
+image: tamayotchi/fizzy
 
 
 #-- About your deployment --#
@@ -8,7 +8,7 @@ image: fizzy
 # Where to deploy fizzy
 servers:
   web:
-    - fizzy.example.com  # Set your server name here
+    - 178.156.188.233
 
 # How you connect to your server
 ssh:
@@ -16,8 +16,8 @@ ssh:
 
 # Automatic SSL
 proxy:
-  ssl: true                # Set this to false if you *don't* want SSL
-  host: fizzy.example.com  # Set your server name here to use automatic SSL
+  ssl: true
+  host: fizzy.nativostudio.co
 
 # Your application configuration (secrets come from .kamal/secrets).
 env:
@@ -27,19 +27,30 @@ env:
     - VAPID_PRIVATE_KEY
     - SMTP_USERNAME
     - SMTP_PASSWORD
+    - S3_ACCESS_KEY_ID
+    - S3_SECRET_ACCESS_KEY
+    - S3_ENDPOINT
   clear:
-    BASE_URL: https://fizzy.example.com # The public URL of your Fizzy instance
-    MAILER_FROM_ADDRESS: support@example.com # The email "from" address that Fizzy sends email from
-    SMTP_ADDRESS: mail.example.com # The SMTP server you'll use to send email
+    BASE_URL: https://fizzy.nativostudio.co
+    MAILER_FROM_ADDRESS: hola@nativostudio.co
+    SMTP_ADDRESS: smtp.resend.com
+    SMTP_PORT: 587
+    SMTP_DOMAIN: nativostudio.co
     MULTI_TENANT: false # Set to true to allow multiple accounts to sign up
     SOLID_QUEUE_IN_PUMA: true # Run background jobs in the app container
+    ACTIVE_STORAGE_SERVICE: s3
+    S3_BUCKET: fizzy
+    S3_REGION: auto             # R2 usa 'auto' preferiblemente
+    S3_FORCE_PATH_STYLE: "true" # Obligatorio para compatibilidad con R2
 
 
 #-- General configuration --#
 
 # Use a local registry to deploy
 registry:
-  server: localhost:5555
+  username: tamayotchi
+  password:
+    - KAMAL_REGISTRY_PASSWORD
 
 # Handy aliases for interacting with your deployment. For eaxmple: `bin/kamal console` will connect to a
 # Rails console in production.
