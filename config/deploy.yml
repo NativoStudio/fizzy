@@ -40,8 +40,10 @@ env:
     SOLID_QUEUE_IN_PUMA: true # Run background jobs in the app container
     ACTIVE_STORAGE_SERVICE: s3
     S3_BUCKET: fizzy
-    S3_REGION: auto             # R2 usa 'auto' preferiblemente
-    S3_FORCE_PATH_STYLE: "true" # Obligatorio para compatibilidad con R2
+    S3_REGION: auto
+    S3_FORCE_PATH_STYLE: true
+    CSP_CONNECT_SRC: "https://*.r2.cloudflarestorage.com https://images.nativostudio.co"
+    CSP_IMG_SRC: "https://images.nativostudio.co"
 
 
 #-- General configuration --#
