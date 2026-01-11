@@ -38,9 +38,10 @@ env:
     MULTI_TENANT: false # Set to true to allow multiple accounts to sign up
     SOLID_QUEUE_IN_PUMA: true # Run background jobs in the app container
     ACTIVE_STORAGE_SERVICE: s3
-    S3_BUCKET: fizzy
-    # CSP_CONNECT_SRC: "https://*.r2.cloudflarestorage.com https://images.nativostudio.co"
-    # CSP_IMG_SRC: "https://images.nativostudio.co"
+    S3_REGION: us-east-1
+    S3_BUCKET: fizzy-production-activestorage
+    CSP_CONNECT_SRC: "https://fizzy-production-activestorage.s3.us-east-1.amazonaws.com https://s3.us-east-1.amazonaws.com"
+    CSP_IMG_SRC: "https://fizzy-production-activestorage.s3.us-east-1.amazonaws.com https://s3.us-east-1.amazonaws.com"
 
 
 #-- General configuration --#
