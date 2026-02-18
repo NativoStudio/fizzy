@@ -1,1 +1,1 @@
-00 17 * * * /rails/bin/litestream-backup
+10 17 * * * /rails/bin/litestream-backup
