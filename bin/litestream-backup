@@ -1,0 +1,16 @@
+#!/bin/sh
+
+set -e
+
+echo "Starting Litestream backup..."
+echo "Primary database: /rails/storage/production.sqlite3"
+echo "Timestamp: $(date '+%Y-%m-%d %H:%M:%S')"
+
+if [ ! -f "/rails/storage/production.sqlite3" ]; then
+  echo "ERROR: Database not found at /rails/storage/production.sqlite3"
+  exit 1
+fi
+
+litestream replicate -config /etc/litestream.yml -exec "sleep 1"
+
+echo "Backup completed successfully at $(date '+%Y-%m-%d %H:%M:%S')"

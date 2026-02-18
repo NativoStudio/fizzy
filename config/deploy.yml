@@ -29,6 +29,8 @@ env:
     - SMTP_PASSWORD
     - S3_ACCESS_KEY_ID
     - S3_SECRET_ACCESS_KEY
+    - LITESTREAM_ACCESS_KEY_ID
+    - LITESTREAM_SECRET_ACCESS_KEY
   clear:
     BASE_URL: https://fizzy.nativostudio.co
     MAILER_FROM_ADDRESS: hola@nativostudio.co
@@ -42,6 +44,9 @@ env:
     S3_BUCKET: fizzy-production-activestorage
     CSP_CONNECT_SRC: "https://fizzy-production-activestorage.s3.us-east-1.amazonaws.com https://s3.us-east-1.amazonaws.com"
     CSP_IMG_SRC: "https://fizzy-production-activestorage.s3.us-east-1.amazonaws.com https://s3.us-east-1.amazonaws.com"
+    LITESTREAM_BUCKET_NAME: fizzy-db-backups
+    LITESTREAM_BUCKET_PATH: fizzy-production
+    LITESTREAM_ENDPOINT: https://8f4d3cb171fe129bcb093ced7d27f4cc.r2.cloudflarestorage.com
 
 
 #-- General configuration --#
@@ -73,3 +78,20 @@ asset_path: /rails/public/assets
 # Configure the image builder.
 builder:
   arch: amd64
+
+accessories:
+  backup:
+    image: tamayotchi/fizzy
+    host: 178.156.188.233
+    cmd: "/usr/local/bin/supercronic /etc/backup.cron"
+    env:
+      clear:
+        LITESTREAM_BUCKET_NAME: fizzy-db-backups
+        LITESTREAM_BUCKET_PATH: fizzy-production
+        LITESTREAM_ENDPOINT: https://8f4d3cb171fe129bcb093ced7d27f4cc.r2.cloudflarestorage.com
+        TZ: UTC
+      secret:
+        - LITESTREAM_ACCESS_KEY_ID
+        - LITESTREAM_SECRET_ACCESS_KEY
+    volumes:
+      - "fizzy_storage:/rails/storage"

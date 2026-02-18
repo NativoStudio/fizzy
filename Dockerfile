@@ -59,6 +59,19 @@ RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
 # Final stage for app image
 FROM base
 
+ARG SUPERCRONIC_VERSION=0.2.32
+
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y ca-certificates libstdc++6 wget && \
+    wget https://github.com/benbjohnson/litestream/releases/download/v0.3.13/litestream-v0.3.13-linux-amd64.tar.gz && \
+    tar -C /usr/local/bin -xzf litestream-v0.3.13-linux-amd64.tar.gz litestream && \
+    rm litestream-v0.3.13-linux-amd64.tar.gz && \
+    wget -O /usr/local/bin/supercronic https://github.com/aptible/supercronic/releases/download/v${SUPERCRONIC_VERSION}/supercronic-linux-amd64 && \
+    chmod +x /usr/local/bin/supercronic && \
+    apt-get remove -y wget && \
+    apt-get autoremove -y && \
+    rm -rf /var/lib/apt/lists /var/cache/apt/archives
+
 # Image metadata
 ARG OCI_DESCRIPTION
 LABEL org.opencontainers.image.description="${OCI_DESCRIPTION}"
@@ -74,6 +87,12 @@ USER 1000:1000
 # Copy built artifacts: gems, application
 COPY --chown=rails:rails --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
 COPY --chown=rails:rails --from=build /rails /rails
+
+# Copy Litestream configuration to default location
+COPY --chown=rails:rails rel/overlays/etc/litestream.yml /etc/litestream.yml
+COPY --chown=rails:rails rel/overlays/etc/backup.cron /etc/backup.cron
+
+RUN chmod +x /rails/bin/litestream-backup
 
 # Entrypoint prepares the database.
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]

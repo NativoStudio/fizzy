@@ -2,6 +2,22 @@
 
 # If running the rails server then create or migrate existing database
 if [ "${1}" == "./bin/thrust" ] && [ "${2}" == "./bin/rails" ] && [ "${3}" == "server" ]; then
+  restore_if_missing() {
+    db_path="$1"
+
+    if [ ! -f "${db_path}" ]; then
+      echo "Database not found at ${db_path}. Attempting to restore from Litestream..."
+      litestream restore -config /etc/litestream.yml -if-replica-exists "${db_path}" || echo "No backup found for ${db_path}, will start fresh"
+    else
+      echo "Database found at ${db_path}, skipping restore."
+    fi
+  }
+
+  restore_if_missing "/rails/storage/production.sqlite3"
+  restore_if_missing "/rails/storage/production_cable.sqlite3"
+  restore_if_missing "/rails/storage/production_cache.sqlite3"
+  restore_if_missing "/rails/storage/production_queue.sqlite3"
+
   MIGRATE=1 ./bin/rails db:prepare
 fi
 
